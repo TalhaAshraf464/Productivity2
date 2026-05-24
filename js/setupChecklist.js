@@ -65,7 +65,7 @@ function getChecklistItems() {
   return [
     {
       title: 'Export a backup before deploying',
-      detail: 'Open History and use Export JSON so your local IndexedDB sessions are portable.',
+      detail: 'Open History and use Save JSON so your local IndexedDB sessions are portable.',
     },
     {
       title: 'Use this exact origin in Google Cloud',

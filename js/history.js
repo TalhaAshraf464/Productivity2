@@ -1,4 +1,5 @@
 import { clearSessions, deleteSession, getAllSessions, importSessions } from './storage.js';
+import { getLastBackupLabel, runWeeklyAutoBackup, saveJsonBackup } from './backup.js';
 
 const historyElements = {
   open: document.getElementById('history-open'),
@@ -13,11 +14,13 @@ function initHistory(callback = null) {
   onDataChanged = callback;
   buildHistoryDialog();
   historyElements.open.addEventListener('click', openHistory);
+  window.setTimeout(checkWeeklyBackup, 1200);
 }
 
 async function openHistory() {
   overlay.hidden = false;
   list.textContent = 'Loading...';
+  status.textContent = `${getLastBackupLabel()} Backups use your browser download folder.`;
 
   try {
     const sessions = await getAllSessions();
@@ -42,7 +45,7 @@ function buildHistoryDialog() {
       <button class="stats-close" id="history-close" type="button" aria-label="Close session history">&times;</button>
       <h2 class="stats-title">Session History</h2>
       <div class="backup-actions history-actions">
-        <button class="backup-btn" id="history-export" type="button">Export JSON</button>
+        <button class="backup-btn" id="history-export" type="button">Save JSON</button>
         <button class="backup-btn" id="history-import" type="button">Import JSON</button>
         <button class="backup-btn danger-btn" id="history-clear" type="button">Clear All</button>
         <input id="history-import-file" type="file" accept="application/json,.json" hidden>
@@ -76,19 +79,17 @@ async function clearHistory() {
 }
 
 async function exportHistory() {
-  const sessions = await getAllSessions();
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    sessions,
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `productivity-sessions-${new Date().toISOString().slice(0, 10)}.json`;
-  link.click();
-  URL.revokeObjectURL(url);
-  status.textContent = `Exported ${sessions.length} sessions.`;
+  const sessionCount = await saveJsonBackup(getAllSessions);
+  status.textContent = `Saved ${sessionCount} sessions as JSON. ${getLastBackupLabel()}`;
+}
+
+async function checkWeeklyBackup() {
+  try {
+    const didBackup = await runWeeklyAutoBackup(getAllSessions);
+    if (didBackup && status) status.textContent = `Weekly JSON backup saved. ${getLastBackupLabel()}`;
+  } catch (error) {
+    console.error('Could not run weekly backup', error);
+  }
 }
 
 async function importHistory(event) {
