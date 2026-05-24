@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Productivity Timer</title>
-    <link rel="stylesheet" href="styles.css?v=4">
-    <link rel="stylesheet" href="stats.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=8">
+    <link rel="stylesheet" href="stats.css?v=8">
   </head>
   <body data-mode="pomodoro">
     <header class="topbar">
@@ -15,8 +15,14 @@
           <span class="label-text">Today</span>
           <span class="daily-total-val" id="daily-total">000:00</span>
         </div>
-        <button class="topbar-btn" id="calendar-open" type="button">Calendar</button>
-        <button class="topbar-btn" id="stats-open" type="button">Stats</button>
+        <details class="topbar-menu" id="topbar-menu">
+          <summary class="topbar-btn" id="menu-toggle">Menu</summary>
+          <div class="topbar-menu-panel" id="topbar-menu-panel">
+            <button class="topbar-btn" id="stats-open" type="button">Stats</button>
+            <button class="topbar-btn" id="history-open" type="button">History</button>
+            <button class="topbar-btn" id="calendar-open" type="button">Calendar</button>
+          </div>
+        </details>
       </div>
     </header>
 
@@ -65,7 +71,7 @@
         <div class="chore-fields" id="chore-fields" hidden>
           <label for="chore-description">
             Description
-            <input id="chore-description" type="text" autocomplete="off" placeholder="Laundry, admin work, cooking">
+            <input id="chore-description" type="text" autocomplete="off" placeholder="Pset, admin work, cooking">
           </label>
 
           <label for="chore-color">
@@ -178,6 +184,6 @@
         </div>
       </div>
     </section>
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/app.js?v=3"></script>
   </body>
 </html>

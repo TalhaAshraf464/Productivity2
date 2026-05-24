@@ -147,6 +147,11 @@
   cursor: pointer;
 }
 .backup-btn:hover { background: #dce5ef; }
+.danger-btn {
+  background: #f8e4e4;
+  color: #ba4949;
+}
+.danger-btn:hover { background: #efd0d0; }
 .backup-note {
   margin: 12px 0 0;
   color: #888;

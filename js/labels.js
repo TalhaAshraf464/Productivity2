@@ -1,4 +1,7 @@
+import { removeLabelFromSessions } from './storage.js';
+
 const LABELS_KEY = 'productivity.labels';
+const SELECTED_LABELS_KEY = 'productivity.selectedLabels';
 const DEFAULT_LABELS = ['Physics', 'Math', 'ML', 'Coding', 'Research', 'Writing'];
 
 const labelElements = {
@@ -10,7 +13,7 @@ const labelElements = {
 };
 
 let availableLabels = loadLabels();
-let selectedLabels = [];
+let selectedLabels = loadSelectedLabels();
 
 function initLabels() {
   labelElements.addForm.addEventListener('submit', addLabel);
@@ -37,6 +40,7 @@ function addLabel(event) {
   }
 
   if (!selectedLabels.includes(label)) selectedLabels.push(label);
+  saveSelectedLabels();
   labelElements.input.value = '';
   renderLabels();
   renderStatsOptions();
@@ -46,6 +50,7 @@ function toggleLabel(label) {
   selectedLabels = selectedLabels.includes(label)
     ? selectedLabels.filter((item) => item !== label)
     : [...selectedLabels, label];
+  saveSelectedLabels();
   renderLabels();
 }
 
@@ -72,7 +77,7 @@ function renderSelectedLabels() {
 
     const remove = document.createElement('button');
     remove.type = 'button';
-    remove.textContent = 'x';
+    remove.textContent = '×';
     remove.setAttribute('aria-label', `Remove ${label}`);
     remove.addEventListener('click', () => toggleLabel(label));
 
@@ -85,6 +90,9 @@ function renderLabelOptions() {
   labelElements.list.replaceChildren();
 
   availableLabels.forEach((label) => {
+    const row = document.createElement('div');
+    row.className = 'label-option-row';
+
     const button = document.createElement('button');
     const isSelected = selectedLabels.includes(label);
     button.type = 'button';
@@ -93,8 +101,33 @@ function renderLabelOptions() {
     button.textContent = label;
     button.setAttribute('aria-pressed', String(isSelected));
     button.addEventListener('click', () => toggleLabel(label));
-    labelElements.list.appendChild(button);
+
+    const remove = document.createElement('button');
+    remove.className = 'label-delete-btn';
+    remove.type = 'button';
+    remove.textContent = '×';
+    remove.setAttribute('aria-label', `Delete ${label}`);
+    remove.addEventListener('click', (event) => {
+      event.stopPropagation();
+      deleteLabel(label);
+    });
+
+    row.append(button, remove);
+    labelElements.list.appendChild(row);
   });
+}
+
+async function deleteLabel(labelToDelete) {
+  const ok = window.confirm(`Are you sure you want to delete "${labelToDelete}"?\n\nThis removes it from the label list and past saved sessions.`);
+  if (!ok) return;
+
+  availableLabels = availableLabels.filter((label) => label !== labelToDelete);
+  selectedLabels = selectedLabels.filter((label) => label !== labelToDelete);
+  saveLabels();
+  saveSelectedLabels();
+  await removeLabelFromSessions(labelToDelete);
+  renderLabels();
+  renderStatsOptions();
 }
 
 function renderStatsOptions() {
@@ -121,8 +154,22 @@ function loadLabels() {
   return DEFAULT_LABELS;
 }
 
+function loadSelectedLabels() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SELECTED_LABELS_KEY));
+    if (Array.isArray(saved)) return saved.map(normalizeLabel).filter(Boolean);
+  } catch {
+    return [];
+  }
+  return [];
+}
+
 function saveLabels() {
   localStorage.setItem(LABELS_KEY, JSON.stringify(availableLabels));
+}
+
+function saveSelectedLabels() {
+  localStorage.setItem(SELECTED_LABELS_KEY, JSON.stringify(selectedLabels));
 }
 
 function normalizeLabel(label) {

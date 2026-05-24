@@ -6,9 +6,14 @@ const elements = {
   durationInput: document.getElementById('duration-minutes'),
   durationLabel: document.querySelector('.duration-edit'),
   endSession: document.getElementById('end-session'),
+  calendarOpen: document.getElementById('calendar-open'),
+  historyOpen: document.getElementById('history-open'),
   labelsDropdown: document.getElementById('labels-dropdown'),
   labelsToggle: document.getElementById('labels-toggle'),
   mainTimer: document.getElementById('main-timer'),
+  menuDetails: document.getElementById('topbar-menu'),
+  menuPanel: document.getElementById('topbar-menu-panel'),
+  menuToggle: document.getElementById('menu-toggle'),
   modeTabs: [...document.querySelectorAll('.mode-tab')],
   resetTimer: document.getElementById('reset-timer'),
   startPause: document.getElementById('start-pause'),
@@ -69,6 +74,10 @@ function toggleLabels() {
   elements.labelsToggle.setAttribute('aria-expanded', String(willOpen));
 }
 
+function closeMenu() {
+  elements.menuDetails.open = false;
+}
+
 function addDailyStudyMs(durationMs) {
   completedStudyTodayMs += durationMs;
 }
@@ -97,5 +106,6 @@ export {
   setDailyStudyMs,
   setLiveStudyEnabled,
   showStats,
+  closeMenu,
   toggleLabels,
 };

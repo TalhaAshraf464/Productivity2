@@ -35,7 +35,7 @@ body {
   justify-content: space-between;
 }
 .brand { font-size: 20px; font-weight: 700; }
-.topbar-right { display: flex; align-items: center; gap: 18px; }
+.topbar-right { display: flex; align-items: center; gap: 14px; }
 .daily-summary { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .label-text { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
 .daily-total-val {
@@ -53,6 +53,35 @@ body {
   cursor: pointer;
 }
 .topbar-btn:hover { background: rgba(255, 255, 255, 0.22); }
+.topbar-menu {
+  position: relative;
+}
+.topbar-menu summary {
+  list-style: none;
+}
+.topbar-menu summary::-webkit-details-marker {
+  display: none;
+}
+.topbar-menu-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 138px;
+  background: rgba(38, 83, 128, 0.96);
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+.topbar-menu[open] .topbar-menu-panel { display: block; }
+.topbar-menu-panel .topbar-btn {
+  width: 100%;
+  text-align: left;
+}
+.topbar-menu-panel .topbar-btn + .topbar-btn {
+  margin-top: 6px;
+}
 
 /* --- Main --- */
 /* 580px leaves room for 3-digit minutes (up to ~500:00) without the time
@@ -67,7 +96,7 @@ body {
 .timer-card {
   background: var(--card-bg);
   border-radius: 6px;
-  padding: 20px 30px 50px;
+  padding: 24px 30px 64px;
   text-align: center;
 }
 .mode-tabs {
@@ -101,14 +130,18 @@ body {
 }
 
 .duration-edit {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
   font-size: 14px;
   color: var(--text-dim);
 }
 .duration-edit input {
   width: 70px;
   padding: 6px 8px;
-  margin-left: 8px;
   border: none;
   border-radius: 4px;
   font-size: 14px;
@@ -237,10 +270,65 @@ body {
   font-size: 12px;
   line-height: 1.5;
 }
+.history-list {
+  display: grid;
+  gap: 10px;
+  max-height: 520px;
+  overflow-y: auto;
+}
+.history-actions {
+  margin-bottom: 8px;
+}
+.history-row {
+  background: #eef3f9;
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.setup-list {
+  display: grid;
+  gap: 10px;
+}
+.setup-item {
+  background: #eef3f9;
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.setup-actions {
+  margin-top: 16px;
+}
+.history-title {
+  color: #2b2b2b;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.history-meta {
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.history-row-actions {
+  margin-top: 10px;
+}
+.history-delete-btn {
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 8px;
+}
+.history-delete-btn {
+  background: #fff;
+  border-color: #e8cccc;
+  color: #ba4949;
+}
 
 /* --- Labels --- */
 .labels-section.is-disabled {
-  opacity: 0.45;
+  display: none;
   pointer-events: none;
 }
 .section-header {
@@ -299,19 +387,41 @@ body {
   margin-bottom: 10px;
   min-height: 10px;
 }
-.label-option {
-  padding: 5px 10px;
+.label-option-row {
+  display: inline-flex;
+  align-items: center;
   background: rgba(255, 255, 255, 0.10);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 14px;
+  overflow: hidden;
+}
+.label-option {
+  padding: 5px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
   color: var(--text);
   font-size: 13px;
   cursor: pointer;
 }
+.label-delete-btn {
+  align-items: center;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 800;
+  justify-content: center;
+  line-height: 1;
+  padding: 0 7px;
+}
+.label-delete-btn:hover,
 .label-option:hover { background: rgba(255, 255, 255, 0.20); }
 .label-option.selected {
   background: rgba(255, 255, 255, 0.38);
-  border-color: transparent;
   font-weight: 600;
 }
 .add-label-form { display: flex; gap: 6px; }
@@ -339,11 +449,22 @@ body {
     padding: 18px 20px;
     gap: 12px;
   }
+  .brand {
+    font-size: 18px;
+    line-height: 1.1;
+  }
+  .topbar-right {
+    gap: 10px;
+  }
   .main { padding: 16px; }
-  .timer-card { padding: 20px 18px 42px; }
+  .timer-card { padding: 24px 18px 56px; }
   .time-display {
     font-size: 72px;
     letter-spacing: 0;
+  }
+  .duration-edit {
+    flex-wrap: wrap;
+    margin-bottom: 30px;
   }
   .controls { flex-wrap: wrap; }
   .primary-btn { padding: 14px 38px; }

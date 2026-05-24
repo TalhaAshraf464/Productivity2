@@ -16,12 +16,16 @@ import {
 import { getChoreDetails, initActivity, isChoreMode, setActivityLocked } from './activity.js';
 import { authorizeCalendar, signOutCalendar, syncSessionToCalendar } from './calendar.js';
 import { initCalendarSettings } from './calendarSettings.js';
+import { initSetupChecklist, openSetupChecklist } from './setupChecklist.js';
 import { TIMER_MODES, customMinutes } from './timerState.js';
 import { getSelectedLabels, initLabels } from './labels.js';
+import { saveTimerMinute } from './settings.js';
+import { initHistory } from './history.js';
 import { getSessionsForToday, saveSession, updateSessionCalendarSync } from './storage.js';
 import { initStats, openStats } from './stats.js';
 import {
   addDailyStudyMs,
+  closeMenu,
   elements,
   renderTimer,
   setDailyStudyMs,
@@ -36,8 +40,11 @@ function init() {
   initCalendarSettings({
     onConnect: authorizeCalendar,
     onDisconnect: signOutCalendar,
+    onSetup: openSetupChecklist,
   });
+  initHistory(loadSavedDailyTotal);
   initStats();
+  initSetupChecklist();
   onTick(() => renderCurrentState());
   onFinish(() => renderCurrentState());
   onSessionEnd((session) => {
@@ -66,7 +73,13 @@ function attachEvents() {
   elements.endSession.addEventListener('click', endSession);
   elements.durationInput.addEventListener('change', updateDuration);
   elements.labelsToggle.addEventListener('click', toggleLabels);
-  elements.statsOpen.addEventListener('click', openStats);
+  elements.historyOpen?.addEventListener?.('click', closeMenu);
+  elements.calendarOpen?.addEventListener?.('click', closeMenu);
+  elements.statsOpen.addEventListener('click', () => {
+    closeMenu();
+    openStats();
+  });
+  document.addEventListener('click', closeMenuFromOutside);
 }
 
 function toggleTimer() {
@@ -92,7 +105,14 @@ function updateDuration(event) {
   const minutes = Math.max(1, Math.min(500, Number.parseInt(event.target.value, 10) || 1));
   event.target.value = minutes;
   customMinutes[getActiveMode()] = minutes;
+  saveTimerMinute(getActiveMode(), minutes);
   setDurationMinutes(minutes);
+}
+
+function closeMenuFromOutside(event) {
+  if (!elements.menuDetails.open) return;
+  if (elements.menuDetails.contains(event.target)) return;
+  closeMenu();
 }
 
 function renderCurrentState() {

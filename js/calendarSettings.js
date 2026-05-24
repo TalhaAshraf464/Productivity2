@@ -62,6 +62,7 @@ function buildDialog() {
           <input id="calendar-id" type="text" autocomplete="off">
         </label>
         <div class="backup-actions">
+          <button class="backup-btn" id="calendar-setup" type="button">Setup Checklist</button>
           <button class="backup-btn" id="calendar-connect" type="button">Connect Google</button>
           <button class="backup-btn" id="calendar-disconnect" type="button">Disconnect</button>
         </div>
@@ -73,6 +74,7 @@ function buildDialog() {
   document.body.appendChild(overlay);
   overlay.addEventListener('click', closeFromBackdrop);
   overlay.querySelector('#calendar-close').addEventListener('click', closeCalendarSettings);
+  overlay.querySelector('#calendar-setup').addEventListener('click', () => handlers.onSetup?.());
   overlay.querySelector('#calendar-connect').addEventListener('click', connectGoogle);
   overlay.querySelector('#calendar-disconnect').addEventListener('click', disconnectGoogle);
   overlay.querySelector('#calendar-form').addEventListener('submit', saveForm);

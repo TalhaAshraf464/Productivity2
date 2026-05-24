@@ -1,3 +1,5 @@
+import { loadTimerMinutes } from './settings.js';
+
 const TIMER_MODES = {
   pomodoro: {
     clock: 'countdown',
@@ -21,21 +23,20 @@ const TIMER_MODES = {
   },
 };
 
+const defaultMinutes = Object.fromEntries(
+  Object.entries(TIMER_MODES).map(([mode, config]) => [mode, config.defaultMinutes])
+);
+
+const customMinutes = loadTimerMinutes(defaultMinutes);
+
 const timerState = {
   activeMode: 'pomodoro',
   status: 'idle',
-  durationMs: TIMER_MODES.pomodoro.defaultMinutes * 60 * 1000,
+  durationMs: customMinutes.pomodoro * 60 * 1000,
   sessionStart: null,
   segmentStart: null,
   accumulatedMs: 0,
   intervalId: null,
 };
-
-const customMinutes = Object.fromEntries(
-  Object.entries(TIMER_MODES).map(([mode, config]) => [
-    mode,
-    config.defaultMinutes,
-  ])
-);
 
 export { TIMER_MODES, customMinutes, timerState };
