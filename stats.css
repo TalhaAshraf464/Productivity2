@@ -1,0 +1,161 @@
+.stats-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  overflow-y: auto;
+  z-index: 100;
+}
+/* The plain `hidden` attribute uses display:none, which loses to the
+   display:flex rule above. This wins on specificity (class + attr). */
+.stats-overlay[hidden] { display: none; }
+
+.stats-panel {
+  background: #ffffff;
+  color: #2b2b2b;
+  max-width: 760px;
+  width: 100%;
+  border-radius: 8px;
+  padding: 28px 32px 36px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+.stats-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+}
+.stats-close:hover { color: #222; }
+
+.stats-title {
+  margin: 0 0 22px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+}
+
+.stats-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+.filter-group select {
+  padding: 8px 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+  min-width: 180px;
+  text-transform: none;
+  font-weight: 400;
+  color: #222;
+  cursor: pointer;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: #eef3f9;
+  border-radius: 6px;
+  padding: 18px 20px;
+}
+.stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #3a6ea5;
+  line-height: 1;
+  margin-bottom: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+.chart-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+.chart-container { width: 100%; overflow-x: auto; }
+.chart-svg { display: block; width: 100%; height: auto; max-height: 320px; }
+.chart-bar { fill: #3a6ea5; }
+.chart-line {
+  fill: none;
+  stroke: #3a6ea5;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.chart-area { fill: #3a6ea5; opacity: 0.15; }
+.chart-dot { fill: #3a6ea5; }
+.chart-grid { stroke: #ececec; stroke-width: 1; }
+.chart-axis-label { fill: #888; font-size: 10px; }
+
+.backup-section {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+.backup-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+.backup-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.backup-btn {
+  padding: 8px 16px;
+  background: #eef3f9;
+  color: #3a6ea5;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.backup-btn:hover { background: #dce5ef; }
+.backup-note {
+  margin: 12px 0 0;
+  color: #888;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 540px) {
+  .summary-cards { grid-template-columns: 1fr; }
+  .stats-filters { flex-direction: column; }
+  .filter-group select { min-width: 0; }
+}
