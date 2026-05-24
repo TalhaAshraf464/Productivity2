@@ -67,6 +67,7 @@ async function authorizeCalendar() {
         reject(new Error(response.error));
         return;
       }
+      window.gapi.client.setToken(response);
       resolve(response);
     };
 

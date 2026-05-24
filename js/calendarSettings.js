@@ -98,7 +98,7 @@ async function connectGoogle() {
   saveSettingsFromForm();
   try {
     await handlers.onConnect?.();
-    setCalendarStatus('Connected. Future sessions can be sent to Google Calendar.');
+    setCalendarStatus('Connected for this browser tab. Future sessions can be sent to Google Calendar.');
   } catch (error) {
     setCalendarStatus(error.message || 'Could not connect to Google Calendar.');
   }
