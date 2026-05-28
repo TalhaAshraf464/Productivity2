@@ -14,8 +14,8 @@ import {
   startTimer,
 } from './timer.js';
 import { getChoreDetails, initActivity, isChoreMode, setActivityLocked } from './activity.js';
-import { authorizeCalendar, signOutCalendar, syncSessionToCalendar } from './calendar.js';
-import { initCalendarSettings } from './calendarSettings.js';
+import { authorizeCalendar, signOutCalendar, syncSessionToCalendar } from './calendar.js?v=2';
+import { initCalendarSettings } from './calendarSettings.js?v=2';
 import { initSetupChecklist, openSetupChecklist } from './setupChecklist.js';
 import { TIMER_MODES, customMinutes } from './timerState.js';
 import { getSelectedLabels, initLabels } from './labels.js';

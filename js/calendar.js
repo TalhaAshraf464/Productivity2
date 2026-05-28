@@ -15,21 +15,11 @@ async function syncSessionToCalendar(session) {
   const settings = getCalendarSettings();
 
   if (!settings.enabled) {
-    return {
-      calendarEventId: null,
-      calendarEvent: event,
-      calendarSynced: false,
-      calendarSyncStatus: 'disabled',
-    };
+    return makeSyncResult(event, 'disabled');
   }
 
   if (!hasCalendarCredentials()) {
-    return {
-      calendarEventId: null,
-      calendarEvent: event,
-      calendarSynced: false,
-      calendarSyncStatus: 'not_configured',
-    };
+    return makeSyncResult(event, 'not_configured');
   }
 
   if (!window.gapi?.client?.getToken?.()) {
@@ -49,7 +39,7 @@ async function syncSessionToCalendar(session) {
     };
   } catch (error) {
     console.error('Google Calendar insert failed', error);
-    return makeSyncResult(event, 'failed');
+    return makeSyncResult(event, getCalendarErrorStatus(error));
   }
 }
 
@@ -149,6 +139,19 @@ function makeSyncResult(event, calendarSyncStatus) {
     calendarSynced: false,
     calendarSyncStatus,
   };
+}
+
+function getCalendarErrorStatus(error) {
+  const status = error?.status || error?.result?.error?.code || error?.body?.error?.code;
+  const reason = error?.result?.error?.status || error?.result?.error?.message || error?.message;
+  if (status && reason) return `failed_${status}_${cleanStatusText(reason)}`;
+  if (status) return `failed_${status}`;
+  if (reason) return `failed_${cleanStatusText(reason)}`;
+  return 'failed_unknown';
+}
+
+function cleanStatusText(text) {
+  return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60);
 }
 
 function getEventTitle(session) {
